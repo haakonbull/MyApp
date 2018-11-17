@@ -1,0 +1,65 @@
+	<extension version="1" minorversion="1" name="MyApp_name" icon="images/MyAppLogo.png">
+    <guid shortid="MyApp_shortid">50BC3A1F-F6F5-4089-A907-D2DD536B712E</guid> <!-- The shortid attribute in the guid (guid = globally uniquie identifier) element is needed for compability with older versions  -->
+    <script src="main_MyApp.py" compiled="false"/> <!-- The <script> element contains the src attribute. It defines the path to the IronPython script file.  -->
+    <interface context="Mechanical">  <!-- The <interface> element is the parent element for custom UI controls. It contains the application’s context attribute. (Jeg tror_90 denne styrer alt som ikke har med objektene som kommer i treet å gjøre. -->
+        <images>images</images>
+
+		<callbacks> <!-- Python filen init kjører -->
+            <oninit>init</oninit>
+		</callbacks>
+
+        <toolbar name="bladeLoad" caption="bladeLoad_caption">
+            <entry name="Convection on Blade " icon="Thermal">
+                <callbacks>
+                    <onclick>createBladeLoad</onclick>
+                </callbacks>
+            </entry>
+            <entry name="OnClickLoad" icon="OnClick" caption="this buttion is defined by onclick">
+                <callbacks>
+                    <onclick>OnClickPythonFunction</onclick>
+                </callbacks>
+            </entry>
+			<entry name="User defined buttion" icon="Userobject_button" caption="this buttion is defined by userObject" userobject="UserObjectButtonInducedObject"/>
+			<entry name="Click here to say something" icon="map1">
+				<callbacks>
+					<onclick>Say_Hello</onclick>
+				</callbacks>
+			</entry>
+		</toolbar>
+    </interface>
+    <simdata context="Mechanical"> <!-- The <simdata> element is the parent element for encapsulating the definition for the tree object. It contains the application’s context attribute. -->
+        <load name="bladeLoad" version="1" caption="Convection on Blade" icon="Thermal" issupport="false" 	isload="true" color="#0000FF">
+			<callbacks>
+				<getsolvecommands>writeConvLoad</getsolvecommands>
+			</callbacks>
+			<property name="Geometry"    caption= "Geometry" control="scoping">
+				<attributes selection_filter="body" />
+			</property>
+			<property name="Thickness" caption= "Thickness" control="float" default="0.0 [m]" unit="Length">
+			</property>
+			<property name="FilmCoeff"    caption= "Film Coefficient" 	control="float" default="0.0 [W m^-2 C^-1]"	unit="Heat Transfer Coefficient">
+			</property>
+			<property name="Temperature"    caption= "Ambient Temperature" control="float" default="120.0 [C]" unit="Temperature">
+            </property>
+        </load>
+        <load name="UserObjectButtonInducedObject" version="1" caption="UserObjectButtonInducedObject_name" icon="Userobject_button_whitebackground" issupport="false" 	isload="true" color="#0000FF">
+			<callbacks>
+				<getsolvecommands>writeConvLoad</getsolvecommands>
+			</callbacks>
+			<property name="Geometry"    caption= "Geometry" control="scoping">
+				<attributes selection_filter="body" />
+			</property>
+			<property name="Thickness" caption= "Thickness" control="float" default="0.0 [m]" unit="Length">
+			</property>
+			<property name="FilmCoeff"    caption= "Film Coefficient" 	control="float" default="0.0 [W m^-2 C^-1]"	unit="Heat Transfer Coefficient">
+			</property>
+			<property name="Temperature"    caption= "Ambient Temperature" control="float" default="120.0 [C]" unit="Temperature">
+            </property>
+        </load>
+		<!-- <solver name="MORsolver" version="1" caption="Reduced Harmonic Acoustics" icon="map1" analysis="Static" physics="Thermal">
+            <callbacks>
+                <onsolve>Generate_MOR_bladeload</onsolve>
+            </callbacks>
+        </solver>  -->
+    </simdata>
+</extension>  

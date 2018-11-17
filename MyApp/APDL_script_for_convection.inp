@@ -1,0 +1,22 @@
+*GET,n_el,ELEM,0,num,max
+*GET,mat1, ELEM,n_el,ATTR,MAT
+
+et,100,152
+keyop,100,8,2.
+et,1001,131
+keyo,1001,3,2
+sectype,1001,shell
+secdata,thickness,mat1
+secoff,mid
+
+emodif,all,type,1001
+emodif,all,secnum,1001
+type,100
+esurf
+fini
+alls
+/solu
+esel,s,type,,100
+nsle
+sf,all,conv,film_coefficient,temperature
+allsel, all
