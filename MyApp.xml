@@ -1,7 +1,7 @@
 	<extension version="1" minorversion="1" name="MyApp_name" icon="images/MyAppLogo.png">
     <guid shortid="MyApp_shortid">50BC3A1F-F6F5-4089-A907-D2DD536B712E</guid> <!-- The shortid attribute in the guid (guid = globally uniquie identifier) element is needed for compability with older versions  -->
     <script src="main_MyApp.py" compiled="false"/> <!-- The <script> element contains the src attribute. It defines the path to the IronPython script file.  -->
-    <interface context="Mechanical">  <!-- The <interface> element is the parent element for custom UI controls. It contains the application’s context attribute. (Jeg tror_90 denne styrer alt som ikke har med objektene som kommer i treet å gjøre. -->
+    <interface context="Mechanical">  <!--  The <interface> element is the parent element for custom UI controls. It contains the application’s context attribute. (Jeg tror_90 denne styrer alt som ikke har med objektene som kommer i treet å gjøre. -->
         <images>images</images>
 
 		<callbacks> <!-- Python filen init kjører -->
