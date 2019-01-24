@@ -1,0 +1,78 @@
+<!--
+Goal is to demonstrate how to implement an ACT load for certain simulation types only. E.g. Implement a load that is valid for static structural / Modal / Thermal analyses only
+
+Main contents:
+    1. One XML file with a toolbar made of three buttons
+      a. A load applicable for Structural Analysis only
+      b. A load applicable for Modal Analysis only
+      c. A Load applicable for all Analysis types... but a single instance of the load is allowed
+    2. One Python file with the code that allows to limit the load to the specific scenario
+
+Usage instructions:
+    1. Copy this XML and the folder (Template8-TargetedAnalysisLoad) to %appdata%\Ansys\v182\ACT\extensions
+    2. Open WB, load the extension and create different analysis types
+    3. Open Mechanical and check the extension
+-->
+
+<extension version="2" name="Template8-TargetedAnalysisLoad">
+
+  <guid shortid="Template8-TargetedAnalysisLoad">e42e7592-f352-46a6-b7af-88aa8959b24f</guid>
+
+  <script src="targeted_analysis_load.py" />
+
+  <interface context="Mechanical">
+
+    <images>images</images>
+
+    <!-- Create a toolbar and add three toolbar buttons. -->
+    <toolbar name="TargetedAnalysisLoad" caption="TargetedAnalysisLoad">
+      <!-- 1st button  -->
+      <entry name="Structural Load" icon="structuralLoad">
+        <callbacks>
+          <!-- This will add the ACT load object to the selected analysis in the tree. -->
+          <onclick>createStaticLoad</onclick>
+        </callbacks>
+      </entry>
+      <!-- 2nd button -->
+      <entry name="Modal Load" icon="modalLoad">
+        <callbacks>
+          <onclick>createModalLoad</onclick>
+        </callbacks>
+      </entry>
+      <!-- 3rd button -->
+      <entry name="Unique Load" icon="singleLoad">
+        <callbacks>
+          <!-- This will add the ACT load object to the selected analysis in the tree. -->
+          <onclick>createUniqueLoad</onclick>
+        </callbacks>
+      </entry>
+
+    </toolbar>
+  </interface>
+
+  <simdata context="Mechanical">
+
+    <load name="Structural Load" version="1" caption="Structural Load" icon="structuralLoad" isload="true" color="#0000FF">
+      <callbacks>
+        <!-- This function is called when Mechanical checks the availability of the load for the selected analysis. -->
+        <canadd>canAddStaticLoad</canadd>
+      </callbacks>
+    </load>
+
+    <load name="Modal Load" version="1" caption="Modal Load" icon="modalLoad" isload="true" color="#0000FF">
+      <callbacks>
+        <!-- This function is called when Mechanical checks the availability of the load for the selected analysis. -->
+        <canadd>canAddModalLoad</canadd>
+      </callbacks>
+    </load>
+
+    <load name="Unique Load" version="1" caption="Unique Load" icon="singleLoad" isload="true" color="#0000FF">
+      <callbacks>
+        <!-- This function is called when Mechanical checks the availability of the load for the selected analysis. -->
+        <canadd>canAddUniqueLoad</canadd>
+      </callbacks>
+    </load>
+
+  </simdata>
+
+</extension>

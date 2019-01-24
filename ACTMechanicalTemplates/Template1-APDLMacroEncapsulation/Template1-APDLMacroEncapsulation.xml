@@ -1,0 +1,50 @@
+<!--
+Goal of this extension: Demonstrate how to encapsulate an APDL macro within one ACT load object.
+
+Main contents:
+    1. One XML file with one ACT load object to collect user inputs for a predefined APDL macro.
+    2. One Python file collecting the user inputs.
+    3. One APDL macro file (slightly modified to be directly usable by the Python file)
+
+Usage instructions:
+    1. Open the associated example Project file: blade-model-150.wbpz.
+    2. Open Mechanical and use the extension.
+    3. After executing a solve, verify the extensions behavior by searching the solver input (ds.dat) for the string that was provided as input.
+-->
+
+<extension version="2" name="Template1-APDLMacroEncapsulation">
+  <guid shortid="Template1-APDLMacroEncapsulation">DC7B91D1-0FD6-439F-811E-316CED903703</guid>
+  <script src="APDL_macro_encapsulation.py" />
+
+  <interface context="Mechanical">
+    <images>images</images>
+
+    <!-- Create a toolbar and add a button to insert a ACT load -->
+    <toolbar name="APDLMacroEncapsulation" caption="APDLMacroEncapsulation">
+      <entry name="Convection on Blade" icon="Thermal">
+        <callbacks>
+          <!-- This will add the ACT load object to the selected analysis in the tree -->
+          <onclick>createBladeLoad</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+  </interface>
+
+  <simdata context="Mechanical">
+    <load name="bladeLoad" version="1" caption="Convection on Blade" icon="Thermal" isload="true" color="#ff3300">
+
+      <callbacks>
+        <!-- This function is going to add APDL commands to the solver input (ds.dat) file in run time -->
+        <getsolvecommands>writeConvectionLoad</getsolvecommands>
+      </callbacks>
+
+      <!-- Expose 4 user inputs to collect for the APDL command -->
+      <property name="Geometry"  caption= "Geometry" control="scoping"/>
+      <property name="Thickness"  caption= "Thickness" control="float" default="0.0 [m]" unit="Length"/>
+      <property name="FilmCoeff"  caption= "Film Coefficient" control="float" default="0.0 [W m^-2 C^-1]"  unit="Heat Transfer Coefficient"/>
+      <property name="Temperature"  caption= "Ambient Temperature" control="float" default="120.0 [C]" unit="Temperature"/>
+
+    </load>
+  </simdata>
+
+</extension>

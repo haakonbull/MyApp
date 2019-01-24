@@ -1,0 +1,64 @@
+<!--
+Goal of this extension:
+    Demonstrate how to implement an ACT load with properties having non-standard unit. E.g. Implement an ACT property with unit kg.m^-2
+
+Main contents:
+    1. One XML file with an ACT load including the non-standard unit dependent property. 
+    2. One Python file accessing the data and writing as commands to the ANSYS solver input file (ds.dat file)
+
+Usage instructions:
+    1. Copy this XML and the folder (Template4-CustomUnit) to %appdata%\Ansys\v182\ACT\extensions.
+    2. Restore the Template4-CustomUnit.wbpz archive.
+    3. Open Mechanical and use the extension.
+    4. Add a "CustomUnit" load by picking the "CustomUnit" toolbar button. In the "Details for CustomUnit" enter a value. 
+       Use the "Unit" dropdown menu from the Mechanical menubar to select an alternate unit system. Observe the change in the 
+       "Details for CustomUnit".
+    5. After executing a solve, verify the extensions behavior by searching the solver input (ds.dat) for the comments that were inserted for each table.
+-->
+
+<extension version="2" name="Template4-CustomUnit">
+  <guid shortid="Template4-CustomUnit">C4BF05E8-929F-4D31-BC78-BE1DD1721720</guid>
+  <script src="custom_unit.py" />
+
+  <interface context="Mechanical">
+
+    <images>images</images>
+
+    <!-- Create a toolbar and add a button to insert a ACT load -->
+    <toolbar name="CustomUnit" caption="CustomUnit">
+      <entry name="CustomUnit" icon="tload">
+        <callbacks>
+          <!-- This will add the ACT load object to the selected analysis tree -->
+          <onclick>CreateCustomUnit</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+  </interface>
+
+  <simdata context="Mechanical">
+    <!-- define the load and a property with the custom unit -->
+    <load name="CustomUnit" version="1" caption="CustomUnit" icon="tload" color="#00FFFF">
+      <callbacks>
+        <!-- This function is going to add APDL commands to the solver input (ds.dat) file in run time -->
+        <getsolvecommands>GetSolveCommandsL</getsolvecommands>
+      </callbacks>
+
+
+      <property name="Value" caption="Value"  default="0" control="float">
+        <attributes Unit="kg m^-2" />
+
+        <!-- Python functions will use this "Unit" attribute for all the conversions -->
+        <callbacks>
+          <!-- value2string: Converts the numeric value to a string representation by adding the units -->
+          <value2string>v2sUnit</value2string>
+          <!-- string2value: Converts the string representation of a numeric value to a number -->
+          <string2value>s2vUnit</string2value>
+          <!-- getvalue: When the value of the property is accessed -->
+          <getvalue>getValueUnit</getvalue>
+        </callbacks>
+      </property>
+
+    </load>
+
+  </simdata>
+</extension>

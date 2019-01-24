@@ -1,0 +1,74 @@
+<!--
+Goal of this extension:
+    1. Demonstrate how to implement ACT generic objects in solution tree of the analyses.
+    2. The generic object can have one or more child objects.
+    3. The child objects can be added using the context menu (RMB).
+
+Main contents:
+    1. One XML file with two ACT objects
+    2. One Python file controlling all the callbacks
+
+Usage instructions:
+    1. Copy this XML and the folder (Template6-GenericObject) to %appdata%\Ansys\v182\ACT\extensions.
+    2. Restore the Template6-GenericPostObject.wbpz archive.
+    3. Open Mechanical, solve any analysis and use the extension to insert the generic post-processing objects
+    
+Known limitations:
+    1. A generic post object can not be used for displaying contours/vectors etc. 
+       Anticipated use for such an object is to perform some actions after solution is done, or to display numerical, tabular or XY plot type results
+    2. The object state doesn't change automatically [when geometry is changed, or solution is cleared etc.]
+-->
+
+<extension version="2" name="Template6-GenericPostObject">
+
+  <guid shortid="Template6-GenericPostObject">8fc89783-8ea1-4669-a2cf-7f381f2434e9</guid>
+
+  <script src="generic_post_object.py" />
+
+  <interface context="Mechanical">
+
+    <images>images</images>
+
+    <!-- Create a toolbar and add a button to insert a ACT load -->
+    <toolbar name="template6" caption="template6">
+      <entry name="Group" icon="group">
+        <callbacks>
+          <!-- This will add the ACT object to the tree -->
+          <onclick>createGroup</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+  </interface>
+
+  <simdata context="Mechanical">
+
+    <!-- define the parent -->
+    <object name="parent" version="1" caption="Parent Entity" icon="group" isload="true" color="#0000FF">
+      <!-- Specify the allowed target of this object -->
+      <target type="analysis" location="post"/>
+      <callbacks>
+        <!-- The "action" will add a context menu option on the object. -->
+        <action name="CreateChild" caption="Add a Child Entity" icon="child">createChild</action>
+        <action name="Clear" caption="Clear Children Data" icon="update">clearChildren</action>
+        <action name="Generate" caption="Generate Children Data" icon="update">generateChildren</action>
+      </callbacks>
+    </object>
+
+    <!-- define the child -->
+    <object name="child" version="1" caption="Child Entity" icon="child" isload="true" color="#0000FF">
+      <!-- Specify the allowed target of this object -->
+      <target type="userobject" name="parent"/>
+      <callbacks>
+        <!-- The "action" will add a context menu option on the object. -->
+        <action name="Evaluate" caption="Evaluate Result" icon="update">evaluateResult</action>
+      </callbacks>
+      <property name="State" caption= "Result State" control="text" readonly="true" default="Need Evaluation">
+        <callbacks>
+          <isvalid>isStateValid</isvalid>
+        </callbacks>
+      </property>
+    </object>
+
+  </simdata>
+
+</extension>

@@ -1,0 +1,80 @@
+<!--
+Goal of this extension:
+    Demonstrate how to implement an ACT property with tabular data.
+    Three variants are described on how to control the number of rows. 
+      1.  As number of timesteps (time dependent data)
+      2.  Manual control (add or remove rows)
+      3.  Fixed number of rows
+Main contents:
+    1. One XML file with an ACT load object with three tabular data details
+    2. One Python file accessing the tabular data content and writing as commands to the ANSYS solver input file (ds.dat file)
+
+Usage instructions:
+    1. Copy this XML and the folder (Template3-TabularData) to %appdata%\Ansys\v182\ACT\extensions.
+    2. Restore the Template3-TabularData.wbpz archive.
+    3. Open Mechanical and use the extension.
+   43. After executing a solve, verify the extensions behavior by searching the solver input (ds.dat) for the comments that were inserted for each table.
+-->
+
+<extension version="2" name="Template3-TabularData">
+  <guid shortid="Template3-TabularData">9102A3A9-C185-4791-84D9-031E7983DC5A</guid>
+  <script src="tabular_data.py" />
+
+  <interface context="Mechanical">
+
+    <images>images</images>
+
+    <!-- Create a toolbar and add a button to insert a ACT load -->
+    <toolbar name="TabularData" caption="TabularData">
+      <entry name="Tabular Data" icon="table">
+        <callbacks>
+          <!-- This will add the ACT load object for the selected analysis in the tree -->
+          <onclick>createTableLoad</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+
+  </interface>
+
+  <simdata context="Mechanical">
+
+    <!-- define the Tabular load and its details -->
+    <load name="Tabular" version="1" caption="Tabular Load" icon="table" isload="true" color="#0000FF">
+      <callbacks>
+        <!-- This function is going to add APDL commands to the solver input (ds.dat) file in run time -->
+        <getsolvecommands>writeTabularData</getsolvecommands>
+      </callbacks>
+
+      <!-- Expose three tabular data, one for each type of table.
+             Each table is defined as a separate <propertytable> -->
+
+      <!-- TimeDependent Table -->
+      <propertytable name="TimeDependent Table"  caption= "TimeDependent Table" display="worksheet" control="applycancel" class="Worksheet.TimeFreqTabularData.TFTabularData">
+        <!-- This class is defined in the file TimeFreqTabularData.py located in the "libraries/Worksheet" folder, which is part of the standard ACT installation -->
+        <property name="Step" caption= "Step" control="integer" readonly="true"></property>
+        <property name="Time" caption= "Time" control="float" readonly="true"></property>
+        <property name="Test Data1"  caption= "Test Data1" control="text"></property>
+      </propertytable>
+
+      <!-- Manual Table -->
+      <propertytable name="Manual Table"  caption= "Manual Table" display="worksheet" control="applycancel" class="Worksheet.PropertyGroupEditor.PGEditor">
+        <!-- This class is defined in the file PropertyGroupEditor.py located in the "libraries/Worksheet" folder, which is part of the standard ACT installation -->
+        <property name="Test Data2"  caption= "Test Data2" control="text"></property>
+      </propertytable>
+
+      <!-- Table with fixed number of rows (user control) -->
+      <propertytable name="Fixed Rows Table"  caption= "Fixed Rows Table" display="worksheet" control="applycancel" class="Worksheet.PropertyGroupEditor.PGEditor">
+        <callbacks>
+          <!-- Define the OnInit callback to create and fill the static rows. -->
+          <oninit>OnInitFixedRowTable</oninit>
+        </callbacks>
+        <!-- This class is defined in the Python script file for this extension -->
+        <property name="Fraction" caption= "Fraction" control="float" readonly="true"></property>
+        <property name="Test Data3"  caption= "Test Data3" control="text"></property>
+      </propertytable>
+
+    </load>
+
+  </simdata>
+
+</extension>

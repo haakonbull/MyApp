@@ -1,0 +1,65 @@
+<!--
+Graphics Extension Template.
+
+Goal of this extension:
+    1. Demonstrate how to implement graphics features in an ACT extension.
+    2. Bind graphics features to an ACT object to manage its visualization.
+    
+Main contents:
+    1. One XML file with an ACT load object named "Element Selector"
+    2. One Python file controlling all the callbacks (graphics.py)
+
+Usage instructions:
+    1. Copy this XML and the folder (Graphics) to %appdata%\Ansys\v182\ACT\extensions
+    2. Enabled this extension (Graphics) into the Extension Manager (menu Extensions > Manage Extensions...)
+    3. Open Mechanical and click the Graphics ACT button to create an Element Selector load.
+    4. Switch to Wireframe and optionnaly Show Mesh for a better result.
+    5. Select node or geometry within the Scoping property.
+    6. All elements attached to this scoping are displayed.
+-->
+
+<extension version="2" name="Template10-Graphics">
+
+  <guid shortid="Template10-Graphics">f5ad6428-e3d5-402a-b769-6b6dd3cab2bf</guid>
+
+  <!-- Python file that contains the callbacks functions. -->
+  <script src="DrawGraphics.py" />
+
+  <!-- Declare the extension interface (mainly toolbar). -->
+  <interface context="Mechanical">
+
+    <!-- The image folder. -->
+    <images>images</images>
+
+    <!-- Declare a toolbar with one entry (a button) and a click callback associated.
+         The callback function CreateElementSelectorLoad is defined in the python file. -->
+    <toolbar name="GraphicsToolbar" caption="Graphics">
+      <entry name="ElementSelectorLoad" icon="load">
+        <callbacks>
+          <onclick>CreateElementSelectorLoad</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+
+  </interface>
+
+  <!-- Simulation data, e.g loads, results. -->
+  <simdata context="Mechanical">
+
+    <!-- Declare the load with 1 property: Scoping method
+         Note that this load is controlled by a controller, this approach is advised as it helps to manage graphics objects in the extension better -->
+    <load name="ElementSelectorLoad" version="1" caption="Element Selector Load" icon="load" class="LoadController" color="#00FF00">
+
+      <!-- The scoping property. -->
+      <property name="Scoping" caption="Scoping" control="scoping">
+        <callbacks>
+          <!-- OnValidate callback: called when the scoping selection validated by the application -->
+          <onvalidate>OnValidateScoping</onvalidate>
+        </callbacks>
+      </property>
+
+    </load>
+
+  </simdata>
+
+</extension>

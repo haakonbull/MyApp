@@ -1,0 +1,68 @@
+<!--
+Attributes Extension Template
+
+Goal of this extension:
+    1. Demonstrate how to use ACT "attributes" to save persistent data.
+
+Main contents:
+    1. One XML file
+    2. One Python file (attributes.py)
+
+Usage instructions:
+    1. Copy this XML and the folder (Template9-Attributes) to %appdata%\Ansys\v182\ACT\extensions.
+    2. Open Mechanical and create a Generate Load.
+    3. Update the mesh then generate the load.
+    4. Close and reopen Mechanical to see persisted data is written to the ACT log file.
+-->
+
+<extension version="2" name="Template9-Attributes">
+
+  <guid shortid="Template9-Attributes">855203e2-f00d-423b-a61b-2d80559aaf87</guid>
+
+  <!-- Python file that contains the callbacks functions. -->
+  <script src="attributes.py" />
+
+  <!-- Declare the extension interface (mainly toolbar). -->
+  <interface context="Mechanical">
+
+    <!-- The image folder. -->
+    <images>images</images>
+
+    <!-- Declare a toolbar with one entry (a button) and a click callback associated.
+         The callback function CreateGenerateLoad is defined in the python file. -->
+    <toolbar name="GenerateToolbar" caption="Generate">
+      <entry name="GenerateLoad" icon="generate">
+        <callbacks>
+          <onclick>CreateGenerateLoad</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+
+  </interface>
+
+  <!-- Simulation data, e.g loads. -->
+  <simdata context="Mechanical">
+
+    <!-- Declare the load with 2 properties: Range and Result. -->
+    <load name="GenerateLoad" version="1" caption="Generate Load" icon="generate" issupport="true" color="#00FF00">
+
+      <callbacks>
+        <!-- Define the oninit callback restore data. -->
+        <oninit>OnInit</oninit>
+        <!-- Define the ongenerate callback so that the load require generation (right-mouse-button action). -->
+        <ongenerate>OnGenerate</ongenerate>
+        <!-- Define the oncleardata to add "clear generated data" option (right-mouse-button action). -->
+        <oncleardata>OnClearData</oncleardata>
+      </callbacks>
+
+      <!-- An integer property, used to define a range of values betwen 0 and the input value. -->
+      <property name="Range" caption="Range" control="integer"/>
+
+      <!-- A read only text property to display the result of the range generation. -->
+      <property name="Result" readonly="true" caption="Result" control="text" default="Not Generated"/>
+
+    </load>
+
+  </simdata>
+
+</extension>

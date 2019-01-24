@@ -1,0 +1,54 @@
+<!--
+APDL Based Result Evaluation Extension Template
+
+Goal of this extension:
+    1. Demonstrate how to implement ACT result which executes an APDL macro on an external ANSYS solver process.  
+    3. Implement a class controller to manage the callbacks of the ACT result.
+    4. Get results for display in Mechanical.
+
+Main contents:
+    1. One XML file with an ACT load objects named "APDL Based Result Evaluation"
+    2. One Python file controlling all the callbacks (APDL_based_result_evaluation.py)
+
+Usage instructions:
+    1. Copy this XML and the folder (Template5-APDLBasedResultEvaluation) to %appdata%\Ansys\v182\ACT\extensions.
+    2. Restore the Tempate5-ExternalSolve archive.
+    3. Open Mechanical and use the extension in a Modal analysis.
+-->
+
+<extension version="2" name="Template5-ExternalSolve">
+  <guid shortid="Template5-ExternalSolve">181F51C5-F494-467E-9930-C60615AD6F07</guid>
+
+  <!-- Python file that contains the callbacks functions. -->
+  <script src="external_solve.py"/>
+
+  <!-- Declare the extension interface (mainly toolbar). -->
+  <interface context="Mechanical">
+
+    <!-- The image folder. -->
+    <images>images</images>
+
+    <!-- Declare a toolbar with one entry (a button) and a click callback associated.
+         The callback function CreateExternalSolveResult is defined in the python file. -->
+    <toolbar name="APDLBasedResultEvaluation" caption="APDL Based Result Evaluation">
+      <entry name="APDLBasedResultEvaluation" icon="result">
+        <callbacks>
+          <onclick>CreateAPDLBasedResultEvaluation</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+
+  </interface>
+
+  <!-- Simulation data, e.g results.-->
+  <simdata context="Mechanical">
+
+    <!-- Declare a nodal result with a scoping property.
+         It uses a controller class named "ExternalSolveResultController" to implements callbacks.-->
+    <result name="APDLBasedResultEvaluation" version="1" caption="APDL Based Result Evaluation" icon="result" location="node" type="vector" unit="Velocity" class="APDLBasedResultEvaluationController">
+      <property name="Geometry" caption="Geometry" control="scoping"/>
+    </result>
+
+  </simdata>
+
+</extension>

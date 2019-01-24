@@ -1,0 +1,62 @@
+<!--
+Goal of this extension:
+    1. Demonstrate how to implement ACT generic objects in model tree above analyses.
+    2. The generic object can have one or more child objects.
+    3. The child objects can be added using the context menu (RMB).
+
+Main contents:
+    1. One XML file with two ACT load objects
+    2. One Python file controlling all the callbacks
+
+Usage instructions:
+    1. Copy this XML and the folder (Template2-GenericObjectCreation) to %appdata%\Ansys\v182\ACT\extensions.
+    2. Restore the Template2-GenericObjectCreation.wbpz archive.
+    2. Open Mechanical and use the extension.
+    3. After executing a solve, verify the extensions behavior by searching the solver input (ds.dat) for the string that was provided as input.
+-->
+
+<extension version="2" name="Template2-GenericObjectCreation">
+
+  <guid shortid="Template2-GenericObjectCreation">C9EF2219-2945-40D1-92B9-DD95DBAB7CF5</guid>
+  <script src="generic_object_creation.py" />
+
+  <interface context="Mechanical">
+
+    <images>images</images>
+
+    <!-- Create a toolbar and add a button to insert the ACT load -->
+    <toolbar name="GenericObjectCreation" caption="GenericObjectCreation">
+      <entry name="Group" icon="group">
+        <callbacks>
+          <!-- This will add the ACT object to the tree -->
+          <onclick>createGroup</onclick>
+        </callbacks>
+      </entry>
+    </toolbar>
+  </interface>
+
+  <simdata context="Mechanical">
+    <!-- define the parent and its details -->
+    <object name="parent" version="1" caption="Parent Entity" icon="group" isload="true" color="#0000FF">
+      <target type="datamodel"/>
+      <callbacks>
+        <!-- The "action" is inserted in a context menu option related to the parent. This action creates a child object under the parent object in the tree -->
+        <action name="createChild" caption="Add a Child Entity" icon="child">createChild</action>
+        <!-- This function is going to add APDL commands to the solver input (ds.dat) file in run time -->
+        <getsolvecommands>writeParentData</getsolvecommands>
+      </callbacks>
+
+      <!-- Expose a user input (Note: you may or may not want a detail exposed for the parent object...)
+             If you don't want, remove the <property> node below -->
+      <property name="Test Data"  caption= "Test Data" control="text"></property>
+    </object>
+
+    <!-- define the child object and its details -->
+    <object name="child" version="1" caption="Child Entity" icon="child" isload="true" color="#0000FF">
+      <target type="userobject" name = "parent"/>
+      <property name="Test Data2"  caption= "Test Data2" control="text"/>
+    </object>
+
+  </simdata>
+
+</extension>

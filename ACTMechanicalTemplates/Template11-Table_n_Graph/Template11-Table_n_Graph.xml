@@ -1,0 +1,53 @@
+<!--
+Goal of this extension:
+    1. Demonstrate how to implement a table and graph object using Mechanical applications existing panes
+    2. The tables will be shown/hidden using two buttons
+       User can extend the table/graph show/hide to an "action" of an ACT object in the tree
+
+Main contents:
+    1. One XML file with two ACT buttons
+    2. One Python file controlling all the callbacks
+
+Documentation References:
+    1. Section 5.1 in Developer's guide
+    2. Some additional modules are used to enable the table/graph functionality. 
+    Note: Since these are external modules (not part of standard ACT bundle), the capabilities provided by these modules may be made available differently in future versions of ACT . 
+          Consequently, the use of these modules should require some refactoring when the extension will be used with future versions of Mechanical.
+
+Usage instructions:
+    1. Copy this XML and the folder (Template11-Table_n_Graph) to %appdata%\Ansys\v182\AdvancedAddinPackage\extension
+    2. Open Mechanical and use the extension
+-->
+<extension version="1" name="Template11-Table_n_Graph">
+  <guid shortid="Template11-Table_n_Graph">b699ac13-ef39-4c15-a21f-e640315dd8f3</guid>
+  <!-- Python file that contains the callbacks functions. -->
+  <script src="main.py" />
+
+  <!-- Declare the extension interface (mainly toolbar). -->
+  <interface context="Mechanical">
+    <!-- The image folder. -->
+    <images>images</images>
+
+    <!-- Declare a toolbar with two entries (buttons) and click callbacks associated.
+         The callback functions showTable and hideTable are defined in the Python file. -->
+    
+    <toolbar name="Table_n_Graph" caption="Table_n_Graph">
+      <entry name="Show" icon="show">
+    <callbacks>
+      <onclick>showTable</onclick>
+    </callbacks>
+      </entry>
+      <entry name="Hide" icon="hide">
+    <callbacks>
+      <onclick>hideTable</onclick>
+    </callbacks>
+      </entry>
+    </toolbar>
+  </interface>
+
+  <!-- Simulation data, e.g loads. -->
+  <simdata context="Mechanical">
+    <!-- We don't have any loads in this case and hence this section is blank. -->
+  </simdata>
+  
+</extension>

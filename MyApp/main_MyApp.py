@@ -3,7 +3,7 @@
 import os
 import myUtils
 
-
+a = 1
 # ---------- Disse maa vaere med for aa bruke MessageBox.Show ---------- 
 clr.AddReference("Ans.UI.Toolkit.Base")
 clr.AddReference("Ans.UI.Toolkit")
@@ -41,7 +41,7 @@ def OnClickPythonFunction(currentAnalysis):
 def Say_Hello(someinput):
     if hasEvaluationEnded(None): return
     a = 1 
-    MessageBox.Show("Hello moron. Compile script = false!")
+    #MessageBox.Show("Hello moron. Compile script = false!")
     a = 1
     input_is_string = isinstance(someinput, basestring)
     ExtAPI.Log.WriteMessage("Print true if the input is a string:")
@@ -50,8 +50,19 @@ def Say_Hello(someinput):
     a = 3
     a = 4
     a = 5
+    Random_function_not_connected(None)
     MessageBox.Show("Extension finished")
 	
+
+
+def Random_function_not_connected():
+    a =1
+    a = 2
+    MessageBox.Show("Extension finished")
+    print("hei du")
+    a = 3
+    for i in range(0,100):
+        a = a + 1
 
     
 def createBladeLoad(currentAnalysis):
@@ -116,12 +127,12 @@ def writeConvLoad(load,stream):
  
  
 #------------------------- EVALUATION ------------------------- 
-#isEvaluation = False    # Compile with this option if license locked version
-isEvaluation = True    # Compile with this option if not license locked, i.e. no <appstoreid> in XML
-expY = '2018'
+isEvaluation = False    # Compile with this option if license locked version
+#isEvaluation = True    # Compile with this option if not license locked, i.e. no <appstoreid> in XML
+expY = '2019'
 expM = '08'
 expD = '30'
-expV = 19.1
+expV = 19.2
 
 import os, time
 import math
